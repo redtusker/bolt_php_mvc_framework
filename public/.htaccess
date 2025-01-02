@@ -1,0 +1,112 @@
+# Disable Directory Browsing
+    ## Prevents users from seeing a directory listing if no index file (like index.php or index.html) exists. 
+    ## Improves security by hiding the contents of directories.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    # Ensures symbolic links are followed (necessary for URL rewriting).
+    Options +FollowSymlinks
+    
+    # Turns on the URL rewrite engine to apply the rules defined below.
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Force Non-WWW URL -> Rewrite "www.example.com -> example.com"
+	RewriteCond %{HTTPS} !=on
+	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+	RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+
+    # Send Requests To Front Controller...
+    # Checks to see if the user is attempting to access a valid file,
+	# such as an image or css document, if this isn't true it sends the
+	# request to the front controller, index.php
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
+
+    ## Redirects all other requests to index.php with the requested URI appended.
+    ## NC: Case-insensitive matching.
+    ## QSA: Appends query string arguments to the redirected URL.
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+	# If we don't have mod_rewrite installed, all 404's
+	# can be sent to index.php, and everything works as normal.
+	ErrorDocument 404 index.php
+</IfModule>
+
+# Restrict Access to Sensitive Files
+<FilesMatch "(\.env|\.htaccess|composer\.(json|lock)|.*\.config|.*\.ini|.*\.bak|.*\.sql|.*\.log)">
+    Require all denied
+</FilesMatch>
+
+# Disable server signature start
+ServerSignature Off
+# Disable server signature end
+
+## Hides the Apache version and module information from error pages and directory listings.
+## Improves security by limiting exposure of server details.
+
+
+### ---- OTHER SECURITY PARAMETERS ---- ###
+# Block PHP execution in uploads directory
+# <Directory "/path/to/uploads">
+#     <FilesMatch "\.php$">
+#         Require all denied
+#     </FilesMatch>
+# </Directory>
+
+# Prevent clickjacking -> Prevent your site from being embedded in iframes:
+# Header always append X-Frame-Options "SAMEORIGIN"
+
+# Set Referrer Policy
+# Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Enable GZIP Compression ->Improve performance by enabling GZIP compression for text-based resources:
+# <IfModule mod_deflate.c>
+#     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+# </IfModule>
+
+# Cache Static Assets
+# <IfModule mod_expires.c>
+#     ExpiresActive On
+#     ExpiresByType image/jpg "access plus 1 month"
+#     ExpiresByType image/jpeg "access plus 1 month"
+#     ExpiresByType image/gif "access plus 1 month"
+#     ExpiresByType image/png "access plus 1 month"
+#     ExpiresByType text/css "access plus 1 week"
+#     ExpiresByType application/javascript "access plus 1 week"
+#     ExpiresByType text/html "access plus 1 hour"
+# </IfModule>
+
+# Prevent Hotlinking -> Protect your site from bandwidth theft by blocking hotlinking:
+# RewriteEngine On
+# RewriteCond %{HTTP_REFERER} !^$
+# RewriteCond %{HTTP_REFERER} !^https://(www\.)?yourdomain\.com/ [NC]
+# RewriteRule \.(jpg|jpeg|png|gif|css|js)$ - [F]
+
+
+### --------------------------------- SOURCES ----------------------------------- ###
+
+# https://www.youtube.com/watch?v=mD3jrHZ3gUw&t=9s
+# https://www.redhat.com/en/blog/beginners-guide-redirects-htaccess
+# https://httpd.apache.org/docs/2.4/howto/htaccess.html?utm_source=chatgpt.com
+# https://www.digitalocean.com/community/tutorials/how-to-use-the-htaccess-file?utm_source=chatgpt.com
+# https://www.plesk.com/blog/various/comprehensive-guide-to-htaccess/?utm_source=chatgpt.com
+# https://www.godaddy.com/resources/skills/htaccess-tutorial-and-cheat-sheet?utm_source=chatgpt.com
+# https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Apache_Configuration_htaccess
+# https://solidwp.com/blog/what-is-the-htaccess-file/
+# https://www.bluehost.com/help/article/htaccess-tutorial
+# https://hostscore.net/learn/htaccess-guide/

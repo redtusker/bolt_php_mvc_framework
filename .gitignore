@@ -1,0 +1,24 @@
+composer.lock
+.env
+.vscode
+/node_modules
+# /public/hot
+# /public/storage
+# /public/css
+# /public/js
+/storage/*.key
+/vendor
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+.idea
+# /public/assets
+# /public/uploads
+# /public/js/app.js
+/public/mix-manifest.json
