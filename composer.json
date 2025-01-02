@@ -3,20 +3,45 @@
     "name": "musamakhizr/bolt_mvc_framework",
     "type": "project",
     "description": "A boilerplate/framework for a PHP MVC structure.",
-    "keywords": ["bolt","php","boilerplate","mvcboilerplate","mvc","framework"],
-    "require": {
-        "php": "^8.2",
-        "vlucas/phpdotenv": "^5.6",
-        "smarty/smarty": "^5.4"
-    },
+    "keywords": [
+        "bolt",
+        "php",
+        "boilerplate",
+        "mvcboilerplate",
+        "mvc",
+        "framework"
+    ],
     "autoload": {
         "psr-4": {
-            "Src\\": "src/"
+            "Src\\": "src/",
+            "Core\\": "core/"
+        },
+        "files": [
+            "src/Helpers/functions.php"
+        ]
+    },
+    "require": {
+        "php": "^8.2",
+        "doctrine/annotations": "^2.0",
+        "doctrine/orm": "^3.3",
+        "guzzlehttp/guzzle": "^7.9",
+        "nesbot/carbon": "^3.8",
+        "smarty/smarty": "^5.4",
+        "symfony/cache": "^7.2",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "scripts": {},
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
-    "scripts": {
-
-    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "MUsamaKhizar",
